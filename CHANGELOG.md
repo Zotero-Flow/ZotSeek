@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.22.6.3] - 2026-10-20
+
+- First organization prerelease after enabling the transferred repository workflow.
+- Add manual CI dispatch for recovery and verification. Runtime behavior remains unchanged.
+
+Version 1.22.6.2 was tagged during migration but did not publish a release while the transferred workflow was disabled.
+
 ## [1.22.6.2] - 2026-10-20
 
 - Move this experimental fork to Zotero-Flow; preserve the add-on ID and existing model indexes.

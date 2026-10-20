@@ -2,9 +2,8 @@
 # checking code that is not yours (pull requests), and catching the release-day
 # rush where those commands get skipped.
 #
-# Deliberately narrow. This workflow never publishes, never tags, never creates
-# a release, and does not run on every branch. Releases stay manual, which is
-# the right default for a plugin that reaches users through auto-update.
+# Main/PR checks stay read-only. A version tag publishes an experimental
+# prerelease only after those checks pass.
 #
 # It cannot test what actually breaks this plugin most often: everything that
 # depends on the Zotero runtime (attached databases, the ONNX worker,
@@ -14,6 +13,7 @@
 name: CI
 
 on:
+  workflow_dispatch:
   pull_request:
   push:
     branches: [main]
