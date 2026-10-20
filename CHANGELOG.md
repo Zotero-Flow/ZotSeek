@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.22.6.2] - 2026-10-20
+
+- Move this experimental fork to Zotero-Flow; preserve the add-on ID and existing model indexes.
+- Update homepage, release and update-manifest URLs.
+- Add tagged prerelease automation with checksums and version checks.
+- Accept Zotero four-part fork versions in the release tool; SemVer-only bumpp rejects them.
+- Runtime model and search behavior is unchanged from 1.22.6.1.
+
+## [1.22.6.1] - 2026-10-14
+
+- Add experimental text-only EmbeddingGemma 2 FP16 support. See [verification and limits](docs/EMBEDDINGGEMMA2-VERIFICATION.md).
+
 All notable changes to ZotSeek - Semantic Search for Zotero will be documented in this file.
 
 ## [1.22.6] - 2026-10-08

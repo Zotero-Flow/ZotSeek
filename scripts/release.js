@@ -3,6 +3,7 @@ const path = require('path');
 const { createWriteStream } = require('fs');
 const archiver = require('archiver');
 const { spawnSync } = require('child_process');
+const { createHash } = require('crypto');
 
 const rootDir = path.resolve(__dirname, '..');
 const buildDir = path.resolve(rootDir, 'build');
@@ -10,13 +11,13 @@ const manifestPath = path.resolve(rootDir, 'manifest.json');
 const updateJsonPath = path.resolve(rootDir, 'update.json');
 
 // GitHub repo info for update URLs
-const GITHUB_OWNER = 'KimYeongHyeon';
+const GITHUB_OWNER = 'Zotero-Flow';
 const GITHUB_REPO = 'ZotSeek';
 
 /**
  * Generate update.json from manifest.json version
  */
-function generateUpdateJson(version) {
+function generateUpdateJson(version, xpiPath) {
   // Read the compatibility gate from manifest.json rather than hardcoding it.
   // The update manifest has its own gate, and it is what decides whether an
   // update is offered at all: if it lags behind the manifest, users on a new
@@ -30,6 +31,7 @@ function generateUpdateJson(version) {
         updates: [
           {
             version: version,
+            update_hash: "sha256:" + createHash("sha256").update(fs.readFileSync(xpiPath)).digest("hex"),
             update_link: `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/releases/download/v${version}/zotseek-${version}.xpi`,
             applications: {
               zotero: {
@@ -77,7 +79,17 @@ async function createXpi(version) {
 
     archive.on('error', reject);
     archive.pipe(output);
-    archive.directory(buildDir, false);
+    // Stable entry order and timestamps keep update hashes identical across builds.
+    function addFiles(directory, prefix = '') {
+      for (const entry of fs.readdirSync(directory, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name, 'en'))) {
+        const name = prefix + entry.name;
+        const fullPath = path.join(directory, entry.name);
+        if (entry.isDirectory()) addFiles(fullPath, name + '/');
+        else if (entry.isFile()) archive.append(fs.createReadStream(fullPath), { name, date: new Date('2026-01-01T00:00:00Z'), mode: 0o644 });
+        else throw new Error('Unexpected non-file in release build: ' + name);
+      }
+    }
+    addFiles(buildDir);
     archive.finalize();
   });
 
@@ -87,33 +99,22 @@ async function createXpi(version) {
 async function release() {
   console.log('ZotSeek Release\n');
 
-  // Step 1: Run bumpp to get new version. Interactive by default; pass an
-  // explicit version as the first argument to run unattended, e.g.
-  //   node scripts/release.js 1.19.0
-  console.log('Step 1: Version bump\n');
-  const requestedVersion = process.argv[2];
-  const bumppArgs = requestedVersion
-    ? [requestedVersion, '--yes', '--no-commit', '--no-tag', '--no-push']
-    : ['--no-commit', '--no-tag', '--no-push'];
-  const bumppResult = spawnSync('npx', ['bumpp', ...bumppArgs], {
-    cwd: rootDir,
-    stdio: 'inherit',
-    shell: true
-  });
-
-  if (bumppResult.status !== 0) {
-    console.error('Version bump cancelled or failed');
-    process.exit(1);
+  // Firefox/Zotero accept a fourth numeric component; bumpp's SemVer parser does not.
+  const version = process.argv[2];
+  if (!/^\d+\.\d+\.\d+(?:\.\d+)?$/.test(version || '')) {
+    throw new Error('Pass an explicit three- or four-part numeric version.');
   }
-
-  // Read the new version from package.json (bumpp updated it)
-  const pkg = JSON.parse(fs.readFileSync(path.resolve(rootDir, 'package.json'), 'utf8'));
-  const version = pkg.version;
+  for (const name of ['package.json', 'package-lock.json']) {
+    const file = path.join(rootDir, name);
+    const value = JSON.parse(fs.readFileSync(file, 'utf8'));
+    value.version = version;
+    if (name === 'package-lock.json') value.packages[''].version = version;
+    fs.writeFileSync(file, JSON.stringify(value, null, 2) + '\n');
+  }
 
   // Step 2: Sync manifest.json and generate update.json
   console.log('\nStep 2: Sync version files\n');
   syncManifestVersion(version);
-  generateUpdateJson(version);
 
   // Step 3: Build
   console.log('\nStep 3: Build\n');
@@ -131,6 +132,10 @@ async function release() {
   // Step 4: Package XPI
   console.log('\nStep 4: Package XPI');
   const xpiPath = await createXpi(version);
+  generateUpdateJson(version, xpiPath);
+  fs.writeFileSync(path.join(rootDir, 'SHA256SUMS'), [xpiPath, updateJsonPath].map(file =>
+    createHash('sha256').update(fs.readFileSync(file)).digest('hex') + '  ' + path.basename(file)
+  ).join('\n') + '\n');
 
   // Summary
   console.log('\n' + '='.repeat(50));

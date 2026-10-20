@@ -38,6 +38,10 @@ function copyStaticFiles() {
     }
   }
 
+  for (const name of ['LICENSE']) {
+    fs.copyFileSync(path.resolve(__dirname, '..', name), path.resolve(buildDir, name));
+  }
+
   // Copy manifest.json
   const manifestSrc = path.resolve(__dirname, '../manifest.json');
   const manifestDest = path.resolve(buildDir, 'manifest.json');

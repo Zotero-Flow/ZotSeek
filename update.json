@@ -3,8 +3,9 @@
     "zotseek@zotero.org": {
       "updates": [
         {
-          "version": "1.22.6.1",
-          "update_link": "https://github.com/KimYeongHyeon/ZotSeek/releases/download/v1.22.6.1/zotseek-1.22.6.1.xpi",
+          "version": "1.22.6.2",
+          "update_hash": "sha256:917e490fc7f95df7e75b30896d11cc12f1c69b7da2504a5c0399cc06c0a89689",
+          "update_link": "https://github.com/Zotero-Flow/ZotSeek/releases/download/v1.22.6.2/zotseek-1.22.6.2.xpi",
           "applications": {
             "zotero": {
               "strict_min_version": "7.999",

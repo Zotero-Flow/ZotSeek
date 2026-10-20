@@ -1,6 +1,10 @@
 # ZotSeek | AI-Powered Semantic Search & MCP Server for Zotero
 
-> **EmbeddingGemma 2 fork:** Download the XPI from [this fork’s Releases](https://github.com/KimYeongHyeon/ZotSeek/releases).
+[![Release](https://img.shields.io/github/v/release/Zotero-Flow/ZotSeek?include_prereleases)](https://github.com/Zotero-Flow/ZotSeek/releases)
+
+Maintained here as an experimental fork of [introfini/ZotSeek](https://github.com/introfini/ZotSeek), originally by José Fernandes. Fork releases preserve upstream version numbering with an additional numeric revision (for example `1.22.6.2`). See [RELEASING.md](RELEASING.md).
+
+> **EmbeddingGemma 2 fork:** Download the XPI from [this fork’s Releases](https://github.com/Zotero-Flow/ZotSeek/releases).
 > In ZotSeek settings, download and select **EmbeddingGemma 2 (multilingual, text)**, then run **Update Index**.
 > Text-only FP16 ONNX, about 575 MB including tokenizer, 768d, entirely local. Existing E5/Nomic indexes are retained.
 > [Verification and limitations](docs/EMBEDDINGGEMMA2-VERIFICATION.md).
@@ -595,7 +599,7 @@ These are third-party projects, maintained by their authors and released under t
 
 **Requirements:** Zotero 8.0 or newer (Zotero 9 and Zotero 10 supported).
 
-1. Download the latest `zotseek-X.Y.Z.xpi` from the [Releases page](https://github.com/KimYeongHyeon/ZotSeek/releases).
+1. Download the latest `zotseek-X.Y.Z.xpi` from the [Releases page](https://github.com/Zotero-Flow/ZotSeek/releases).
 2. In Zotero, open **Tools → Plugins**.
 3. Click the gear icon (⚙️) in the top-right and choose **Install Plugin From File…**
 4. Select the downloaded `.xpi` file.
