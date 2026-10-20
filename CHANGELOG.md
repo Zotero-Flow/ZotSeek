@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.22.6.4] - 2026-10-20
+
+- Fetch Git LFS model weights in CI instead of packaging pointer text.
+- Reject unresolved LFS pointers before building.
+- Verify the CI package hash matches the committed update manifest before publishing.
+- Withdraw the 1.22.6.3 prerelease to draft after public-download verification found a model pointer. Runtime search code is unchanged.
+
 ## [1.22.6.3] - 2026-10-20
 
 - First organization prerelease after enabling the transferred repository workflow.

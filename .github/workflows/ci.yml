@@ -32,6 +32,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          lfs: true
 
       - uses: actions/setup-node@v4
         with:
@@ -76,6 +78,8 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          lfs: true
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -85,6 +89,8 @@ jobs:
         run: node -e "if ('v' + require('./package.json').version !== process.env.GITHUB_REF_NAME) process.exit(1)"
       - run: node scripts/release.js "${GITHUB_REF_NAME#v}"
       - run: npm run check:versions
+      - name: Verify packaged hash matches committed update manifest
+        run: git diff --exit-code -- update.json
       - run: gh release create "$GITHUB_REF_NAME" zotseek-*.xpi update.json SHA256SUMS --verify-tag --prerelease --title "$GITHUB_REF_NAME (experimental fork)" --generate-notes
         env:
           GH_TOKEN: ${{ github.token }}

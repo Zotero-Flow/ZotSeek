@@ -1,6 +1,7 @@
 const esbuild = require('esbuild');
 const fs = require('fs');
 const path = require('path');
+const { assertNoLfsPointers } = require('./check-lfs');
 
 const args = process.argv.slice(2);
 const isDev = args.includes('--dev');
@@ -196,6 +197,7 @@ const collectionExportDialogBuildOptions = {
 
 async function build() {
   try {
+    assertNoLfsPointers(path.resolve(__dirname, '../content/models'));
     copyStaticFiles();
     copyTransformersFiles();
 

@@ -3,9 +3,9 @@
     "zotseek@zotero.org": {
       "updates": [
         {
-          "version": "1.22.6.3",
-          "update_hash": "sha256:b971c6441598c77b23a356fdcd41e2725313bc918aea5b4b6fcd214ac8decda1",
-          "update_link": "https://github.com/Zotero-Flow/ZotSeek/releases/download/v1.22.6.3/zotseek-1.22.6.3.xpi",
+          "version": "1.22.6.4",
+          "update_hash": "sha256:bb7d002ecc5e8503c51517ef128482265956aa2a66824f0e1bd080b57cffe55a",
+          "update_link": "https://github.com/Zotero-Flow/ZotSeek/releases/download/v1.22.6.4/zotseek-1.22.6.4.xpi",
           "applications": {
             "zotero": {
               "strict_min_version": "7.999",
